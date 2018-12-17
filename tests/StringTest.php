@@ -130,4 +130,21 @@ class StringTest extends TestCase
 
         $response->assertResponseStatus(403);
     }
+
+    public function testUserCanUpdateOwnedString()
+    {
+        $string = factory(StringValue::class)->create(['user_id' => $this->user->id]);
+
+        $oldVal = $string->value;
+
+        $data = [
+            'value' => str_random(),
+        ];
+
+        $response = $this->request('PATCH', "strings/{$string->id}", $this->user, $data);
+
+        $newVal = $response->decodeResponseJson()->value;
+
+        $this->assertNotSame($oldVal, $newVal);
+    }
 }
