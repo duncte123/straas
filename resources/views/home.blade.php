@@ -57,7 +57,7 @@
 </code></pre>
 <p>Replace &quot;<em>[token]</em>&quot; with your roken</p>
 <h1><a id="Obtaining_a_token_23"></a>Obtaining a token</h1>
-<p>Tokens are currently not obtainible via the api, to obtain a token contact <em>duncte123#1245</em> on discord</p>
+<p>Tokens are currently not obtainable via the api, to obtain a token contact <em>duncte123#1245</em> on discord</p>
 <h1><a id="Objects_26"></a>Objects</h1>
 <p>Example string object:</p>
 <pre><code class="language-JSON">{
