@@ -28,19 +28,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\StringValue;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Validation\UnauthorizedException;
 
 class StringController extends Controller
 {
-    public function fromUser(Request $request)
+    public function fromUser(Request $request): array
     {
         return [
             'strings' => $request->user()->strings,
         ];
     }
 
-    public function createString(Request $request)
+    public function createString(Request $request): Model
     {
         $validated = $this->validate($request, [
             'value' => 'required|string|max:50',
@@ -53,7 +54,7 @@ class StringController extends Controller
         return $string;
     }
 
-    public function updateString(Request $request, $id)
+    public function updateString(Request $request, $id): Model
     {
         $validated = $this->validate($request, [
             'value' => 'required|string|max:50',
@@ -70,7 +71,7 @@ class StringController extends Controller
         return $string;
     }
 
-    public function deleteString(Request $request, $id)
+    public function deleteString(Request $request, $id): array
     {
         $string = StringValue::query()->findOrFail($id);
 

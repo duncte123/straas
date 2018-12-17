@@ -1,7 +1,4 @@
 <?php
-
-use App\Models\User;
-
 /**
  * MIT License
  *
@@ -26,35 +23,21 @@ use App\Models\User;
  * SOFTWARE.
  *
  */
-abstract class TestCase extends Laravel\Lumen\Testing\TestCase
-{
-    /**
-     * Creates the application.
-     *
-     * @return \Laravel\Lumen\Application
-     */
-    public function createApplication()
-    {
-        return require __DIR__ . '/../bootstrap/app.php';
-    }
 
-    protected function request($method, $uri, $user, array $data = [], array $headers = [])
-    {
-        $headers = array_merge(['Accept' => 'application/json'], $headers);
+/*
+|--------------------------------------------------------------------------
+| Model Factories
+|--------------------------------------------------------------------------
+|
+| Here you may define all of your model factories. Model factories give
+| you a convenient way to create models for testing and seeding your
+| database. Just tell the factory how a default model should look.
+|
+*/
 
-        if ($user instanceof User) {
-            $headers['Authorization'] = 'Token ' . $user->token;
-        }
-
-        $request = $this->json($method, "api/$uri", $data, $headers);
-
-        return $request;
-    }
-
-    protected function decodeResponseJson($assoc = false)
-    {
-        $this->assertResponseOk();
-
-        return json_decode($this->response->getContent(), $assoc);
-    }
-}
+$factory->define(App\Models\StringValue::class, function (Faker\Generator $faker) {
+    return [
+        'user_id' => factory(\App\Models\User::class)->create()->id,
+        'value' => $faker->unique()->word,
+    ];
+});
