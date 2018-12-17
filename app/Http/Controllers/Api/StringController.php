@@ -24,43 +24,31 @@
  *
  */
 
-namespace App\Models;
+namespace App\Http\Controllers\Api;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Lumen\Auth\Authorizable;
+use App\Http\Controllers\Controller;
+use App\Models\StringValue;
+use Illuminate\Http\Request;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class StringController extends Controller
 {
-    use Authenticatable, Authorizable, SoftDeletes;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'token',
-    ];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'id',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
-    public function strings(): HasMany
+    public function fromUser(Request $request)
     {
-        return $this->hasMany(StringValue::class);
+        return [
+            'strings' => $request->user()->strings,
+        ];
+    }
+
+    public function createString(Request $request)
+    {
+        $validated = $this->validate($request, [
+            'value' => 'required|string|max:50',
+        ]);
+
+        $string = StringValue::create(array_merge($validated, [
+            'user_id' => $request->user()->id,
+        ]));
+
+        return $string;
     }
 }

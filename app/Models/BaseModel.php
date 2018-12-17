@@ -37,4 +37,18 @@ class BaseModel extends Model
         'id',
     ];
 
+    protected $casts = [
+        'id' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
+
+    protected $hidden = [
+        'user_id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
 }

@@ -16,7 +16,7 @@ class CreateStringValuesTable extends Migration
         Schema::create('string_values', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->text('value');
+            $table->string('value', 50);
             $table->timestamps();
             $table->softDeletes();
         });

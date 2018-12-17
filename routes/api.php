@@ -24,43 +24,9 @@
  *
  */
 
-namespace App\Models;
+/**
+ * @var \Laravel\Lumen\Routing\Router $router
+ */
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Lumen\Auth\Authorizable;
-
-class User extends Model implements AuthenticatableContract, AuthorizableContract
-{
-    use Authenticatable, Authorizable, SoftDeletes;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'token',
-    ];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'id',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
-    public function strings(): HasMany
-    {
-        return $this->hasMany(StringValue::class);
-    }
-}
+$router->get('/strings', ['uses' => 'StringController@fromUser']);
+$router->post('/strings', ['uses' => 'StringController@createString']);
