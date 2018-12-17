@@ -26,10 +26,30 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StringValue extends BaseModel
+class StringValue extends Model
 {
+    use SoftDeletes;
+
+    protected $guarded = [
+        'id',
+    ];
+
+    protected $casts = [
+        'id' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
+
+    protected $hidden = [
+        'user',
+        'user_id',
+        'deleted_at',
+    ];
 
     public function user(): BelongsTo
     {
