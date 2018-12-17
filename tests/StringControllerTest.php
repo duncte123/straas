@@ -29,7 +29,7 @@ use App\Models\User;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
-class StringTest extends TestCase
+class StringControllerTest extends TestCase
 {
     use DatabaseMigrations, DatabaseTransactions;
 
@@ -146,5 +146,18 @@ class StringTest extends TestCase
         $newVal = $response->decodeResponseJson()->value;
 
         $this->assertNotSame($oldVal, $newVal);
+    }
+
+    public function testUserCanNotUpdateOtherString()
+    {
+        $string = factory(StringValue::class)->create();
+
+        $data = [
+            'value' => str_random(),
+        ];
+
+        $response = $this->request('PATCH', "strings/{$string->id}", $this->user, $data);
+
+        $response->assertResponseStatus(403);
     }
 }
