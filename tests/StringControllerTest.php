@@ -102,6 +102,19 @@ class StringControllerTest extends TestCase
         $this->assertCount(1, $newStrings);
     }
 
+    public function testCannotCreateStringWhenNotLoggedIn()
+    {
+        $data = [
+            'value' => str_random(),
+        ];
+
+        $response = $this->request('POST', 'strings', '', $data, [
+            'Authorization' => 'Token InvalidToken',
+        ]);
+
+        $response->assertResponseStatus(403);
+    }
+
     public function testStringCreationFailsWhenStringIsTooLarge()
     {
         $data = [
