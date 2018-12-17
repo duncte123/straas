@@ -1,0 +1,5 @@
+language: php
+php: '7.3'
+
+before_script: php composer.phar install
+script: vendor/bin/phpunit
