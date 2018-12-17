@@ -31,7 +31,3 @@
 $router->get('/', function () {
     return view('home');
 });
-
-$router->get('/user/{user}', function ($user) {
-    return \App\Models\User::query()->findOrFail($user);
-});
