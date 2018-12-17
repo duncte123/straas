@@ -29,6 +29,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\StringValue;
 use Illuminate\Http\Request;
+use Illuminate\Validation\UnauthorizedException;
 
 class StringController extends Controller
 {
@@ -50,5 +51,37 @@ class StringController extends Controller
         ]));
 
         return $string;
+    }
+
+    public function updateString(Request $request, $id)
+    {
+        $validated = $this->validate($request, [
+            'value' => 'required|string|max:50',
+        ]);
+
+        $string = StringValue::query()->findOrFail($id);
+
+        if ($string->user->id !== $request->user()->id) {
+            throw new UnauthorizedException();
+        }
+
+        $string->update($validated);
+
+        return $string;
+    }
+
+    public function deleteString(Request $request, $id)
+    {
+        $string = StringValue::query()->findOrFail($id);
+
+        if ($string->user->id !== $request->user()->id) {
+            throw new UnauthorizedException();
+        }
+
+        $string->delete();
+
+        return [
+            'success' => true,
+        ];
     }
 }

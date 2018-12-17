@@ -30,3 +30,5 @@
 
 $router->get('/strings', ['uses' => 'StringController@fromUser']);
 $router->post('/strings', ['uses' => 'StringController@createString']);
+$router->patch('/strings/{id}', ['uses' => 'StringController@updateString']);
+$router->delete('/strings/{id}', ['uses' => 'StringController@deleteString']);

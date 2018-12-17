@@ -46,6 +46,7 @@ class BaseModel extends Model
 
     protected $hidden = [
         'user_id',
+        'user',
         'deleted_at',
     ];
 
