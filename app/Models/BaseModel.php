@@ -24,11 +24,15 @@
  *
  */
 
-namespace App\Events;
+namespace App\Models;
 
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Database\Eloquent\Model;
 
-abstract class Event
+class BaseModel extends Model
 {
-    use SerializesModels;
+
+    protected $guarded = [
+        'id',
+    ];
+
 }

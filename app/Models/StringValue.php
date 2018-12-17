@@ -24,11 +24,9 @@
  *
  */
 
-namespace App\Events;
+namespace App\Models;
 
-use Illuminate\Queue\SerializesModels;
-
-abstract class Event
+class StringValue extends BaseModel
 {
-    use SerializesModels;
+
 }
