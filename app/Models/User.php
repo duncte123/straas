@@ -56,6 +56,6 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
     public function strings(): HasMany
     {
-      return $this->hasMany(StringValue::class);
+        return $this->hasMany(StringValue::class);
     }
 }

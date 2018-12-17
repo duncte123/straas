@@ -31,9 +31,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class StringValue extends BaseModel
 {
 
-  public function user(): BelongsTo
-  {
-    return $this->belongsTo(User::class);
-  }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }
