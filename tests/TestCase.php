@@ -1,7 +1,4 @@
 <?php
-
-use App\Models\User;
-
 /**
  * MIT License
  *
@@ -26,8 +23,14 @@ use App\Models\User;
  * SOFTWARE.
  *
  */
-abstract class TestCase extends Laravel\Lumen\Testing\TestCase
+
+use App\Models\User;
+use Laravel\Lumen\Testing\DatabaseMigrations;
+use Laravel\Lumen\Testing\DatabaseTransactions;
+
+abstract class TestCase extends \Laravel\Lumen\Testing\TestCase
 {
+    use DatabaseMigrations, DatabaseTransactions;
     /**
      * Creates the application.
      *
@@ -38,17 +41,12 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
         return require __DIR__ . '/../bootstrap/app.php';
     }
 
-    protected function request($method, $uri, $user, array $data = [], array $headers = [])
+    protected function getHeaders(?User $user = null, array $otherHeaders = []): array
     {
-        $headers = array_merge(['Accept' => 'application/json'], $headers);
-
-        if ($user instanceof User) {
-            $headers['Authorization'] = 'Token ' . $user->token;
-        }
-
-        $request = $this->json($method, "api/$uri", $data, $headers);
-
-        return $request;
+        return array_merge([
+            'Authorization' => 'Token ' . ($user ? $user->token : 'FakeToken'),
+            'Accept' => 'application/json',
+        ], $otherHeaders);
     }
 
     protected function decodeResponseJson($assoc = false)

@@ -30,6 +30,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class StringValue
+ *
+ * @package App\Models
+ *
+ * @property User    user
+ * @property integer user_id
+ * @property integer id
+ * @property String  value
+ */
 class StringValue extends Model
 {
     use SoftDeletes;

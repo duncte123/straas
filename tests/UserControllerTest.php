@@ -24,52 +24,47 @@
  *
  */
 
-namespace App\Models;
+use App\Models\User;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Lumen\Auth\Authorizable;
-
-/**
- * Class User
- *
- * @package App\Models
- *
- * @property integer       id
- * @property String        token
- * @property StringValue[] strings
- */
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class UserControllerTest extends TestCase
 {
-    use Authenticatable, Authorizable, SoftDeletes;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'token',
-    ];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'id',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
-    public function strings(): HasMany
+    /*public function testUserCanBeCreated()
     {
-        return $this->hasMany(StringValue::class);
+        $this->assertCount(0, User::all());
+
+        $this->post('api/tokens');
+
+        $this->assertArrayHasKey('token', $this->decodeResponseJson(true));
+        $this->assertCount(1, User::all());
+    }*/
+
+    public function testUserTokenCanBeUpdated()
+    {
+        $user = factory(User::class)->create();
+
+        $oldToken = $user->token;
+
+        $this->patch('api/tokens', [], $this->getHeaders($user));
+
+        $newToken = User::find($user->id)->token;
+
+        $response = $this->decodeResponseJson(true);
+
+        $this->assertNotSame($oldToken, $newToken);
+        $this->assertArrayHasKey('token', $response);
+        $this->assertSame($newToken, $response['token']);
     }
+
+    public function testUserCanBeDeleted()
+    {
+        $user = factory(User::class)->create();
+
+        $this->delete('api/tokens', [], $this->getHeaders($user));
+
+        $response = $this->decodeResponseJson(true);
+
+        $this->assertArrayHasKey('success', $response);
+        $this->assertTrue($response['success']);
+    }
+
 }

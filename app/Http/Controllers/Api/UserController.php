@@ -24,52 +24,48 @@
  *
  */
 
-namespace App\Models;
+namespace App\Http\Controllers\Api;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Lumen\Auth\Authorizable;
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
 
-/**
- * Class User
- *
- * @package App\Models
- *
- * @property integer       id
- * @property String        token
- * @property StringValue[] strings
- */
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class UserController extends Controller
 {
-    use Authenticatable, Authorizable, SoftDeletes;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'token',
-    ];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'id',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
-    public function strings(): HasMany
+    // Enable when ready for users
+    /*public function __construct()
     {
-        return $this->hasMany(StringValue::class);
+        $this->middleware('auth', ['except' => ['createUser']]);
+    }*/
+
+    public function createUser()
+    {
+        return User::create([
+            'token' => str_random(50),
+        ]);
+    }
+
+    public function resetToken(Request $request)
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        $user->update([
+            'token' => str_random(50),
+        ]);
+
+        return $user;
+    }
+
+    public function deleteUser(Request $request)
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        $user->strings()->forceDelete();
+
+        return [
+            'success' => $user->delete(),
+        ];
     }
 }

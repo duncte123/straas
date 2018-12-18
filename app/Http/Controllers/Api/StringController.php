@@ -47,11 +47,9 @@ class StringController extends Controller
             'value' => 'required|string|max:50',
         ]);
 
-        $string = StringValue::create(array_merge($validated, [
+        return StringValue::create(array_merge($validated, [
             'user_id' => $request->user()->id,
         ]));
-
-        return $string;
     }
 
     public function updateString(Request $request, $id): Model
@@ -60,7 +58,8 @@ class StringController extends Controller
             'value' => 'required|string|max:50',
         ]);
 
-        $string = StringValue::query()->findOrFail($id);
+        /** @var StringValue $string */
+        $string = StringValue::findOrFail($id);
 
         if ($string->user->id !== $request->user()->id) {
             throw new UnauthorizedException();
@@ -73,16 +72,15 @@ class StringController extends Controller
 
     public function deleteString(Request $request, $id): array
     {
-        $string = StringValue::query()->findOrFail($id);
+        /** @var StringValue $string */
+        $string = StringValue::findOrFail($id);
 
         if ($string->user->id !== $request->user()->id) {
             throw new UnauthorizedException();
         }
 
-        $string->delete();
-
         return [
-            'success' => true,
+            'success' => $string->delete(),
         ];
     }
 }

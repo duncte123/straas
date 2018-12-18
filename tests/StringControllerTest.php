@@ -26,13 +26,9 @@
 
 use App\Models\StringValue;
 use App\Models\User;
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class StringControllerTest extends TestCase
 {
-    use DatabaseMigrations, DatabaseTransactions;
-
     /**
      * @var User
      */
@@ -59,7 +55,9 @@ class StringControllerTest extends TestCase
             return $s->toArray();
         })->toArray();
 
-        $response = $this->request('GET', 'strings', $this->user)->decodeResponseJson()->strings;
+        $this->get('api/strings', $this->getHeaders($this->user));
+
+        $response = $this->decodeResponseJson()->strings;
 
         $userStrings = collect($response)->map(function ($s) {
             // Map the values to match the faker return
@@ -78,11 +76,9 @@ class StringControllerTest extends TestCase
 
     public function testUserCanNotRetrieveStringsWhenNotLoggedIn()
     {
-        $response = $this->request('GET', 'strings', 'bla', [], [
-            'Authorization' => 'Token InvalidToken',
-        ]);
+        $this->get('api/strings', $this->getHeaders());
 
-        $response->assertResponseStatus(403);
+        $this->assertResponseStatus(403);
     }
 
     public function testStringCreationWithValidParameters()
@@ -93,11 +89,11 @@ class StringControllerTest extends TestCase
 
         $currentStrings = $this->user->strings()->get();
 
-        $response = $this->request('POST', 'strings', $this->user, $data);
+        $this->post('api/strings', $data, $this->getHeaders($this->user));
 
         $newStrings = $this->user->strings()->get();
 
-        $response->assertResponseStatus(200);
+        $this->assertResponseStatus(200);
         $this->assertCount(0, $currentStrings);
         $this->assertCount(1, $newStrings);
     }
@@ -108,11 +104,9 @@ class StringControllerTest extends TestCase
             'value' => str_random(),
         ];
 
-        $response = $this->request('POST', 'strings', '', $data, [
-            'Authorization' => 'Token InvalidToken',
-        ]);
+        $this->post('api/strings', $data, $this->getHeaders());
 
-        $response->assertResponseStatus(403);
+        $this->assertResponseStatus(403);
     }
 
     public function testStringCreationFailsWhenStringIsTooLarge()
@@ -121,27 +115,27 @@ class StringControllerTest extends TestCase
             'value' => str_random(51),
         ];
 
-        $response = $this->request('POST', 'strings', $this->user, $data);
+        $this->post('api/strings', $data, $this->getHeaders($this->user));
 
-        $response->assertResponseStatus(422);
+        $this->assertResponseStatus(422);
     }
 
     public function testUserCanDeleteOwnString()
     {
         $string = factory(StringValue::class)->create(['user_id' => $this->user->id]);
 
-        $response = $this->request('DELETE', "strings/{$string->id}", $this->user);
+        $this->delete("api/strings/{$string->id}", [], $this->getHeaders($this->user));
 
-        $response->assertResponseOk();
+        $this->assertResponseOk();
     }
 
     public function testUserCanNotDeleteOtherStrings()
     {
         $string = factory(StringValue::class)->create();
 
-        $response = $this->request('DELETE', "strings/{$string->id}", $this->user);
+        $this->delete("api/strings/{$string->id}", [], $this->getHeaders($this->user));
 
-        $response->assertResponseStatus(403);
+        $this->assertResponseStatus(403);
     }
 
     public function testUserCanUpdateOwnedString()
@@ -154,9 +148,9 @@ class StringControllerTest extends TestCase
             'value' => str_random(),
         ];
 
-        $response = $this->request('PATCH', "strings/{$string->id}", $this->user, $data);
+        $this->patch("api/strings/{$string->id}", $data, $this->getHeaders($this->user));
 
-        $newVal = $response->decodeResponseJson()->value;
+        $newVal = $this->decodeResponseJson()->value;
 
         $this->assertNotSame($oldVal, $newVal);
     }
@@ -169,8 +163,8 @@ class StringControllerTest extends TestCase
             'value' => str_random(),
         ];
 
-        $response = $this->request('PATCH', "strings/{$string->id}", $this->user, $data);
+        $this->patch("api/strings/{$string->id}", $data, $this->getHeaders($this->user));
 
-        $response->assertResponseStatus(403);
+        $this->assertResponseStatus(403);
     }
 }
