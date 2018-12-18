@@ -24,6 +24,7 @@
  *
  */
 
+use App\Models\StringValue;
 use App\Models\User;
 
 class UserControllerTest extends TestCase
@@ -65,6 +66,22 @@ class UserControllerTest extends TestCase
 
         $this->assertArrayHasKey('success', $response);
         $this->assertTrue($response['success']);
+    }
+
+    public function testUserStringsAreDeletedWhenUserIsDeleted()
+    {
+        $user = factory(User::class)->create();
+
+        factory(StringValue::class, 10)->create(['user_id' => $user->id]);
+
+        $this->delete('api/tokens', [], $this->getHeaders($user));
+
+        $response = $this->decodeResponseJson(true);
+        $strings = StringValue::withTrashed()->get();
+
+        $this->assertArrayHasKey('success', $response);
+        $this->assertTrue($response['success']);
+        $this->assertCount(0, $strings);
     }
 
 }
