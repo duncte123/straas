@@ -39,18 +39,6 @@ class UserControllerTest extends TestCase
         $this->assertCount(1, User::all());
     }
 
-    public function testUserCannotBeCreatedWhenLoggedIn()
-    {
-        $user = factory(User::class)->create();
-
-        $this->assertCount(0, User::all());
-
-        $this->post('api/tokens', [], $this->getHeaders($user));
-
-        $this->assertArrayHasKey('token', $this->decodeResponseJson(true));
-        $this->assertCount(1, User::all());
-    }
-
     public function testUserTokenCanBeUpdated()
     {
         $user = factory(User::class)->create();
