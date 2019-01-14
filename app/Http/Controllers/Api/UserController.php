@@ -32,11 +32,10 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    // Enable when ready for users
-    /*public function __construct()
+    public function __construct()
     {
         $this->middleware('auth', ['except' => ['createUser']]);
-    }*/
+    }
 
     public function createUser()
     {
