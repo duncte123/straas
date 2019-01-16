@@ -56,6 +56,13 @@ class UserControllerTest extends TestCase
         $this->assertSame($newToken, $response['token']);
     }
 
+    public function testUserTokenCannotBeUpdatedWhenNotLoggedIn()
+    {
+        $this->patch('api/tokens');
+
+        $this->assertResponseStatus(403);
+    }
+
     public function testUserCanBeDeleted()
     {
         $user = factory(User::class)->create();

@@ -34,6 +34,11 @@ use Illuminate\Validation\UnauthorizedException;
 
 class StringController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function fromUser(Request $request): array
     {
         return [

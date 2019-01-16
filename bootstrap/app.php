@@ -126,9 +126,6 @@ $app->router->group([
 $app->router->group([
     'namespace' => 'App\Http\Controllers\Api',
     'prefix' => 'api',
-    'middleware' => [
-        'auth',
-    ],
 ], function ($router) {
     require __DIR__ . '/../routes/api.php';
 });
