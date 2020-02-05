@@ -46,7 +46,7 @@ try {
 */
 
 $app = new Laravel\Lumen\Application(
-    realpath(__DIR__)
+    dirname(__DIR__)
 );
 
 // $app->withFacades(false);
